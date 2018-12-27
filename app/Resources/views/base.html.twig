@@ -6,6 +6,10 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         {% endblock %}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
@@ -17,8 +21,8 @@
             {% if app.user %}
                 <div class="menu">
                     <a href="#">Home</a>
-                    <a href="#">Discover</a>
-                    <a href="#">Me</a>
+                    <a href="{{ path('user_discover') }}">Discover</a>
+                    <a href="{{ path('user_profile') }}">Me</a>
                     <a href="{{ path('security_logout') }}">Logout</a>
                 </div>
             {% endif %}
@@ -30,6 +34,11 @@
             <footer><p>Chirper © 2019</p></footer>
         {% endblock %}
     </div>
-    {% block javascripts %}{% endblock %}
+    {% block javascripts %}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+    {% endblock %}
+
     </body>
 </html>

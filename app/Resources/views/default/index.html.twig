@@ -1,5 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div><h1>INDEX</h1></div>
+    <div class="content">
+        <div class="chirper">
+
+            <h2 class="titlebar">{{ user.username }}</h2>
+
+            <form id="formSubmitChirp" action="{{ path('chirp_create') }}" class="chirp-form" method="post">
+                <textarea name="chirp[content]" class="chirp-input"></textarea>
+                {{ form_row(form._token) }}
+                <input class="chirp-submit" id="btnSubmitChirp" value="Publish" type="submit">
+            </form>
+
+            <div id="userStats" class="user-details">
+                <span>0 chirps</span> | <span>1 following</span> | <span>0 followers</span>
+            </div>
+        </div>
+        <div id="chirps" class="chirps"><h2 class="titlebar">Chirps</h2>
+            {% for chirp in chirps %}
+                <article class="chirp">
+                    <div class="titlebar">
+                        <a href="" class="chirp-author">{{ chirp.author.username }}</a>
+                        <span class="chirp-time">{{ chirp.dateAdded }}</span>
+                    </div>
+                    <p>{{ chirp.content }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

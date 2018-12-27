@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="content">
+        <div class="chirps">
+            <h2 class="titlebar">Discover</h2>
+            <div id="userlist">
+                {% for user in users %}
+                    <div class="userbox">
+                        <div><a href="#" class="chirp-author">{{ user.username }}</a></div>
+
+                        <div class="user-details">
+                            <span>TODO followers</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

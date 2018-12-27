@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="content">
+        <div class="chirper">
+
+            <h2 class="titlebar">{{ user.username }}</h2>
+
+            {#<form id="formSubmitChirp" action="{{ path('chirp_create') }}" class="chirp-form" method="post">#}
+                {#<textarea name="chirp[content]" class="chirp-input"></textarea>#}
+                {#{{ form_row(form._token) }}#}
+                {#<input class="chirp-submit" id="btnSubmitChirp" value="Publish" type="submit">#}
+            {#</form>#}
+
+            <div id="myStats" class="user-details">
+                <span>TODO chirps</span> | <span>TODO following</span> | <span>TODO followers</span>
+            </div>
+        </div>
+        <div id="myChirps" class="chirps">
+            <h2 class="titlebar">My Chirps</h2>
+            {% for chirp in chirps %}
+                <article class="chirp">
+                    <div class="titlebar">
+                        <a href="" class="chirp-author">{{ chirp.author.username }}</a>
+                        <span class="chirp-time">
+                            <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
+                            <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
+                            {{ chirp.dateAdded }}
+                        </span>
+                    </div>
+                    <p>{{ chirp.content }}</p>
+                </article>
+            {% else %}
+                <div class="chirp">
+                    <span class="loading">No chirps in database</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

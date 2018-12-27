@@ -33,6 +33,11 @@ header>*, footer>* {
     padding: 5px 10px;
 }
 
+.menu a:last-of-type {
+    padding: 1px;
+    float: right;
+}
+
 .menu>a:hover {
     background: #7f7f7f;
 }

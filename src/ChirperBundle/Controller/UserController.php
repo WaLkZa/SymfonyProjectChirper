@@ -2,6 +2,7 @@
 
 namespace ChirperBundle\Controller;
 
+use ChirperBundle\Entity\Chirp;
 use ChirperBundle\Entity\User;
 use ChirperBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -44,5 +45,37 @@ class UserController extends Controller
         }
 
         return $this->render('user/register.html.twig');
+    }
+
+    /**
+     * @Route("/discover", name="user_discover")
+     */
+    public function discoverAction()
+    {
+        $users = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->findAll();
+
+        return $this->render('user/discover.html.twig', ['users' => $users]);
+    }
+
+    /**
+     * @Route("/profile", name="user_profile")
+     */
+    public function profileAction()
+    {
+        $userId = $this->getUser()->getId();
+        $user = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->find($userId);
+
+        $chirps = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->getAllChirpsByUserId($userId);
+
+        return $this->render('user/profile.html.twig', ['user' => $user, 'chirps' => $chirps]);
     }
 }

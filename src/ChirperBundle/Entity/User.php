@@ -2,6 +2,7 @@
 
 namespace ChirperBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -36,6 +37,17 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ChirperBundle\Entity\Chirp", mappedBy="author")
+     */
+    private $chirps;
+
+    public function __construct()
+    {
+        $this->chirps = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -135,6 +147,24 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChirps()
+    {
+        return $this->chirps;
+    }
+
+    /**
+     * @param Chirp chirp
+     * @return User
+     */
+    public function addPost(Chirp $chirp)
+    {
+        $this->chirps[] = $chirp;
+        return $this;
     }
 }
 
