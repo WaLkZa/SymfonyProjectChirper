@@ -22,8 +22,6 @@ class ChirpController extends Controller
         $form = $this->createForm(ChirpType::class, $chirp);
         $form->handleRequest($request);
 
-        $chirps = $this->getDoctrine()->getRepository(Chirp::class)->getAllChirps();
-
         if ($form->isSubmitted() && $form->isValid())
         {
             $currentUser = $this->getUser();
@@ -33,16 +31,8 @@ class ChirpController extends Controller
             $em->persist($chirp);
             $em->flush();
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirect($request->headers->get('referer'));
         }
-
-        //return $this->render('article/create.html.twig', ['form' => $form->createView()]);
-        return $this->render('default/index.html.twig',
-            [
-                'form' => $form->createView(),
-                'user' => $this->getCurrentUser(),
-                'chirps' => $chirps
-            ]);
     }
 
     /**
@@ -76,6 +66,7 @@ class ChirpController extends Controller
         {
             $currentUser = $this->getUser();
             $chirp->setAuthor($currentUser);
+            $chirp->setDateAdded(new \DateTime('now'));
 
             $em = $this->getDoctrine()->getManager();
             $em->merge($chirp);

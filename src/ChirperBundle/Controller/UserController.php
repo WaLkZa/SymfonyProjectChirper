@@ -4,6 +4,7 @@ namespace ChirperBundle\Controller;
 
 use ChirperBundle\Entity\Chirp;
 use ChirperBundle\Entity\User;
+use ChirperBundle\Form\ChirpType;
 use ChirperBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +77,37 @@ class UserController extends Controller
             ->getRepository(Chirp::class)
             ->getAllChirpsByUserId($userId);
 
-        return $this->render('user/profile.html.twig', ['user' => $user, 'chirps' => $chirps]);
+        $chirp = new Chirp();
+        $form = $this->createForm(ChirpType::class, $chirp);
+
+        return $this->render('user/profile.html.twig',
+            [
+                'user' => $user,
+                'chirps' => $chirps,
+                'form' => $form->createView()
+            ]
+        );
+    }
+
+    /**
+     * @Route("/feed", name="user_feed")
+     */
+    public function feedAction() {
+        $userId = $this->getUser()->getId();
+        $user = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->find($userId);
+
+        $chirps = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->getAllChirps();
+
+        return $this->render('user/feed.html.twig',
+            [
+                'user' => $user,
+                'chirps' => $chirps
+            ]);
     }
 }

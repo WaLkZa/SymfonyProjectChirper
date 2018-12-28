@@ -14,13 +14,9 @@ class DefaultController extends Controller
     public function indexAction()
     {
         if ($this->getUser()) {
-            //return $this->render('default/index.html.twig');
-            return $this->redirectToRoute('chirp_create');
+            return $this->redirectToRoute('user_feed');
         } else {
             return $this->redirectToRoute('security_login');
         }
-        // replace this example code with whatever you need
-
-        //return $this->redirectToRoute('security_login');
     }
 }

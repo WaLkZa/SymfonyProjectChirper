@@ -20,7 +20,7 @@
 
             {% if app.user %}
                 <div class="menu">
-                    <a href="#">Home</a>
+                    <a href="{{ path('user_feed') }}">Home</a>
                     <a href="{{ path('user_discover') }}">Discover</a>
                     <a href="{{ path('user_profile') }}">Me</a>
                     <a href="{{ path('security_logout') }}">Logout</a>
