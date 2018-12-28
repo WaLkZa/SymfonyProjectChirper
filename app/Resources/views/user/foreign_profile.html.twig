@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="content">
+        <div class="chirper">
+            <h2 class="titlebar">{{ user.username }}</h2>
+
+            {#<a id="btnFollow" class="chirp-author" href="#">Follow</a>#}
+
+            {#<div id="userProfileStats" class="user-details">#}
+                {#<span>1 chirps</span> | <span>0 following</span> | <span>2 followers</span>#}
+            {#</div>#}
+        </div>
+        <div id="profileChirps" class="chirps">
+            <h2 class="titlebar">{{ user.username }}'s Chirps</h2>
+                {% for chirp in chirps %}
+                    <article class="chirp">
+                        <div class="titlebar">
+                            <a href="{{ path('user_foreign_profile', {userId: user.id}) }}" class="chirp-author">{{ user.username }}</a>
+                            <span class="chirp-time">{{ chirp.dateAdded }}</span>
+                        </div>
+                        <p>{{ chirp.content }}</p>
+                    </article>
+                {% else %}
+                    <div class="chirp">
+                        <span class="loading">The user does not have any posts!</span>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

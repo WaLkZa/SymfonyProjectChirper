@@ -110,4 +110,44 @@ class UserController extends Controller
                 'chirps' => $chirps
             ]);
     }
+
+    /**
+     * @Route("/profile/{userId}", name="user_foreign_profile", requirements={"userId": "\d+"})
+     * @param Request $request
+     * @param $userId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function foreignProfileAction(Request $request, $userId)
+    {
+        $currentLoggedUserId = $this->getUser()->getId();
+
+        if ($userId == $currentLoggedUserId) {
+            return $this->redirectToRoute('user_profile');
+        }
+
+        $user = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->find($userId);
+
+        if ($user === null) {
+            return $this->redirectToRoute('user_discover');
+        }
+
+        $chirps = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->getAllChirpsByUserId($userId);
+
+        if ($chirps === null) {
+            return $this->redirectToRoute('user_discover');
+        }
+
+        return $this->render('user/foreign_profile.html.twig',
+            [
+                'user' => $user,
+                'chirps' => $chirps
+            ]
+        );
+    }
 }

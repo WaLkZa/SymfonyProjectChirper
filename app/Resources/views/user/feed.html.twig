@@ -6,7 +6,7 @@
             {% for chirp in chirps %}
                 <article class="chirp">
                     <div class="titlebar">
-                        <a href="" class="chirp-author">{{ chirp.author.username }}</a>
+                        <a href="{{ path('user_foreign_profile', {userId: chirp.author.id}) }}" class="chirp-author">{{ chirp.author.username }}</a>
                         <span class="chirp-time">
                             {% if user.id == chirp.authorId %}
                                 <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
