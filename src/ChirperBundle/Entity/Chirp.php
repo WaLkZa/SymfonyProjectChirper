@@ -115,24 +115,7 @@ class Chirp
      */
     public function getDateAdded()
     {
-         return $this->dateAdded->format("c");
-//        $datetime1 = new DateTime('now');
-//        $datetime2 = new DateTime($this->dateAdded->format("c"));
-//        $interval = $datetime1->diff($datetime2);
-//        return $interval->i;
-
-        //$difference = new \DateTime('now')-
-//        $diff = floor($difference / 60000);
-//        if ($diff < 1) return 'less than a minute';
-//        if ($diff < 60) return $diff. ' minute'.$this -> pluralize($diff);
-//        $diff = floor($diff / 60);
-//        if ($diff < 24) return $diff. ' hour'.$this -> pluralize($diff);
-//        $diff = floor($diff / 24);
-//        if ($diff < 30) return $diff. ' day'.$this -> pluralize($diff);
-//        $diff = floor($diff / 30);
-//        if ($diff < 12) return $diff. ' month'.$this -> pluralize($diff);
-//        $diff = floor($diff / 12);
-//        return $diff. ' year'.$this -> pluralize($diff);
+        return $this->calculateTime($this->dateAdded);
    }
 
    /**
@@ -190,9 +173,49 @@ class Chirp
         return $this;
     }
 
-    private function pluralize($value) {
-        if ($value !== 1) return 's';
-        else return '';
+    private function calculateTime($date)
+    {
+        $currentDate = new DateTime('now');
+        $sinceStartDate = $currentDate->diff($date);
+
+        $minutes = $sinceStartDate->days * 24 * 60;
+        $minutes += $sinceStartDate->h * 60;
+        $minutes += $sinceStartDate->i;
+
+        if ($minutes < 1) {
+            return 'less than a minute';
+        }
+
+        if ($minutes < 60) {
+            return $minutes . ' minute' . $this->pluralize($minutes);
+        }
+
+        $minutes = floor($minutes / 60);
+
+        if ($minutes < 24) {
+            return $minutes . ' hour' . $this->pluralize($minutes);
+        }
+
+        $minutes = floor($minutes / 24);
+
+        if ($minutes < 30) {
+            return $minutes . ' day' . $this->pluralize($minutes);
+        }
+
+        $minutes = floor($minutes / 30);
+
+        if ($minutes < 12) {
+            return $minutes . ' month' . $this->pluralize($minutes);
+        }
+
+        $minutes = floor($minutes / 12);
+
+        return $minutes . ' year' . $this->pluralize($minutes);
+    }
+
+    private function pluralize($value)
+    {
+        return $value !== 1 ? 's' : '';
     }
 }
 
