@@ -17,7 +17,13 @@
                     <article class="chirp">
                         <div class="titlebar">
                             <a href="{{ path('user_foreign_profile', {userId: user.id}) }}" class="chirp-author">{{ user.username }}</a>
-                            <span class="chirp-time">{{ chirp.dateAdded }}</span>
+                            <span class="chirp-time">
+                                {% if app.getUser().isAdmin() %}
+                                    <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
+                                    <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
+                                {% endif %}
+                                {{ chirp.dateAdded }}
+                            </span>
                         </div>
                         <p>{{ chirp.content }}</p>
                     </article>

@@ -9,6 +9,7 @@ use ChirperBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Role\Role;
 
 class UserController extends Controller
 {
@@ -29,19 +30,15 @@ class UserController extends Controller
 
             $user->setPassword($password);
 
+            $role = $this
+                ->getDoctrine()
+                ->getRepository(Role::class)
+                ->findOneBy(['name' => 'ROLE_USER']);
+            $user->addRole($role);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-
-//            $role = $this
-//                ->getDoctrine()
-//                ->getRepository(Role::class)
-//                ->findOneBy(['name' => 'ROLE_USER']);
-//            $user->addRole($role);
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($user);
-//            $em->flush();
             return $this->redirectToRoute('security_login');
         }
 
