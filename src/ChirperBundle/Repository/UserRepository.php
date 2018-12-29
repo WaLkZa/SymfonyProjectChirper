@@ -10,4 +10,15 @@ namespace ChirperBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getAllUsersExceptCurrentLogged($userId) {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery(
+                'SELECT u FROM ChirperBundle:User u 
+                        WHERE u.id != ?1'
+            );
+
+        $query->setParameter(1, $userId);
+        return $query->getResult();
+    }
 }

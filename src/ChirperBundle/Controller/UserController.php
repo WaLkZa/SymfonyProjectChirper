@@ -53,10 +53,12 @@ class UserController extends Controller
      */
     public function discoverAction()
     {
+        $currentUserId = $this->getUser()->getId();
+
         $users = $this
             ->getDoctrine()
             ->getRepository(User::class)
-            ->findAll();
+            ->getAllUsersExceptCurrentLogged($currentUserId);
 
         return $this->render('user/discover.html.twig', ['users' => $users]);
     }
