@@ -36,4 +36,21 @@ class ChirpRepository extends \Doctrine\ORM\EntityRepository
         $query->setParameter(1, $userId);
         return $query->getResult();
     }
+
+    /**
+     * @param $userId
+     * @return integer
+     */
+    public function countAllUserChirps($userId) {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(c.id) FROM ChirperBundle:Chirp c 
+                        WHERE c.authorId = ?1'
+            );
+
+        $query->setParameter(1, $userId);
+        $result = $query->getResult();
+        return $result[0][1];
+    }
 }

@@ -79,11 +79,17 @@ class UserController extends Controller
         $chirp = new Chirp();
         $form = $this->createForm(ChirpType::class, $chirp);
 
+        $chirpsCount = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->countAllUserChirps($userId);
+
         return $this->render('user/profile.html.twig',
             [
                 'user' => $user,
                 'chirps' => $chirps,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'chirpsCount' => $chirpsCount
             ]
         );
     }
@@ -142,10 +148,16 @@ class UserController extends Controller
             return $this->redirectToRoute('user_discover');
         }
 
+        $chirpsCount = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->countAllUserChirps($userId);
+
         return $this->render('user/foreign_profile.html.twig',
             [
                 'user' => $user,
-                'chirps' => $chirps
+                'chirps' => $chirps,
+                'chirpsCount' => $chirpsCount
             ]
         );
     }
