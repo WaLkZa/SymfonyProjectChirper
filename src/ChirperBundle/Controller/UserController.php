@@ -25,6 +25,18 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $userNameForm = $form->getData()->getUsername();
+
+            $userForm = $this
+                ->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneBy(['username' => $userNameForm]);
+
+            if (null !== $userForm) {
+                $this->addFlash('info', "That username " . $userNameForm . " already taken!");
+                return $this->render('user/register.html.twig');
+            }
+
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
 

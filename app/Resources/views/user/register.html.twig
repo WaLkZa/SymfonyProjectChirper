@@ -2,6 +2,12 @@
 
 {% block body %}
     <div class="content">
+        {% for msg in app.session.flashBag.get('info') %}
+                <script>
+                    toastr.info('{{ msg }}')
+                </script>
+        {% endfor %}
+
         <form name="register" action="{{ path('user_register') }}" class="form chirps" id="formRegister" method="post">
             <label>Username</label>
             <input name="user[username]" type="text">
