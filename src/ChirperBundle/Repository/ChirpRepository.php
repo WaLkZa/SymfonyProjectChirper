@@ -1,8 +1,7 @@
 <?php
 
 namespace ChirperBundle\Repository;
-
-use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityRepository;
 use PDO;
 
 /**
@@ -13,7 +12,8 @@ use PDO;
  */
 class ChirpRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getAllChirps() {
+    public function getAllChirps()
+    {
         $query = $this
             ->getEntityManager()
             ->createQuery(
@@ -24,7 +24,8 @@ class ChirpRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
-    public function getAllChirpsByUserId($userId) {
+    public function getAllChirpsByUserId($userId)
+    {
         $query = $this
             ->getEntityManager()
             ->createQuery(
@@ -41,7 +42,8 @@ class ChirpRepository extends \Doctrine\ORM\EntityRepository
      * @param $userId
      * @return integer
      */
-    public function countAllUserChirps($userId) {
+    public function countAllUserChirps($userId)
+    {
         $query = $this
             ->getEntityManager()
             ->createQuery(
@@ -52,5 +54,25 @@ class ChirpRepository extends \Doctrine\ORM\EntityRepository
         $query->setParameter(1, $userId);
         $result = $query->getResult();
         return $result[0][1];
+    }
+
+    public function getAllChirpsByFollowedUsers($currentUserId)
+    {
+        $sql = 'SELECT c.*, u2.username
+                FROM
+                 users AS u
+                 INNER JOIN followers AS f ON f.follower_id = u.id
+                 INNER JOIN users as u2 ON u2.id = f.followed_id
+                 INNER JOIN chirps AS c ON c.authorId = u2.id
+                WHERE
+                 u.id = :currentUserId
+                ORDER BY c.dateAdded DESC';
+
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('currentUserId', $currentUserId);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 }

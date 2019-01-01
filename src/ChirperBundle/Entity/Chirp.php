@@ -4,6 +4,7 @@ namespace ChirperBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use DOMDocument;
 
 /**
  * Chirp
@@ -91,7 +92,7 @@ class Chirp
      */
     public function getContent()
     {
-        return $this->content;
+        return $this->findURLInText($this->content);
     }
 
     /**
@@ -115,6 +116,7 @@ class Chirp
      */
     public function getDateAdded()
     {
+        //https://stackoverflow.com/questions/14654963/using-twig-in-a-custom-twig-extension
         return $this->calculateTime($this->dateAdded);
    }
 
@@ -216,6 +218,19 @@ class Chirp
     private function pluralize($value)
     {
         return $value !== 1 ? 's' : '';
+    }
+
+    private function findURLInText($text)
+    {
+        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+
+        if (preg_match($reg_exUrl, $text, $url)) {
+            // make the urls hyper links
+            return preg_replace($reg_exUrl, '<a href="'.$url[0].'">'.$url[0].'</a>', $text);
+        } else {
+            // if no urls in the text just return the text
+            return $text;
+        }
     }
 }
 

@@ -53,10 +53,29 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * Many Users have Many Users.
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="following")
+     */
+    private $followers;
+
+    /**
+     * Many Users have many Users.
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="followers")
+     * @ORM\JoinTable(name="followers",
+     *      joinColumns={@ORM\JoinColumn(name="follower_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="followed_id", referencedColumnName="id")}
+     *      )
+     */
+    private $following;
+
     public function __construct()
     {
         $this->chirps = new ArrayCollection();
         $this->roles = new ArrayCollection();
+
+        $this->followers = new ArrayCollection();
+        $this->following = new ArrayCollection();
     }
 
     /**
@@ -211,5 +230,55 @@ class User implements UserInterface
     public function isAdmin() {
         return in_array("ROLE_ADMIN", $this->getRoles());
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFollowers()
+    {
+        return $this->followers;
+    }
+
+    /**
+     * @param User $follower
+     * @return User
+     */
+    public function setFollower(User $follower)
+    {
+        $this->followers[] = $follower;
+        return $this;
+    }
+
+    public function removeFollower(User $follower)
+    {
+        $this->followers->removeElement($follower);
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFollowing()
+    {
+        return $this->following;
+    }
+
+    /**
+     * @param User $following
+     * @return User
+     */
+    public function setFollowing(User $following)
+    {
+        $this->following[] = $following;
+        return $this;
+    }
+
+    public function removeFollowing(User $following)
+    {
+        $this->following->removeElement($following);
+        return $this;
+    }
+
+
 }
 

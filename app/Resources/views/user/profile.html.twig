@@ -13,7 +13,7 @@
             </form>
 
             <div id="myStats" class="user-details">
-                <span>{{ chirpsCount }} chirps</span> | <span>TODO following</span> | <span>TODO followers</span>
+                <span>{{ chirpsCount }} chirps</span> | <span>{{ followingCount }} following</span> | <span>{{ followersCount }} followers</span>
             </div>
         </div>
         <div id="myChirps" class="chirps">
@@ -28,7 +28,11 @@
                             {{ chirp.dateAdded }}
                         </span>
                     </div>
-                    <p>{{ chirp.content }}</p>
+                    <p>
+                        {#{% autoescape false %}#}
+                        {{ chirp.content }}
+                        {#{% endautoescape %}#}
+                    </p>
                 </article>
             {% else %}
                 <div class="chirp">

@@ -11,14 +11,57 @@ namespace ChirperBundle\Repository;
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
     public function getAllUsersExceptCurrentLogged($userId) {
-        $query = $this
-            ->getEntityManager()
-            ->createQuery(
-                'SELECT u FROM ChirperBundle:User u 
-                        WHERE u.id != ?1'
-            );
+        $sql = 'SELECT u.id, u.username, COUNT(f.followed_id) AS followers_count FROM users AS u
+                    LEFT JOIN followers AS f ON f.followed_id = u.id
+                    WHERE u.id != :userId
+                    GROUP BY u.id
+                    ORDER BY followers_count DESC, u.username ASC';
 
-        $query->setParameter(1, $userId);
-        return $query->getResult();
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('userId', $userId);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function countUserFollowers($userId)
+    {
+        $sql = 'SELECT COUNT(*) AS counter FROM followers
+                WHERE follower_id = :userId';
+
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('userId', $userId);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function countUserFollowing($userId)
+    {
+        $sql = 'SELECT COUNT(*) AS counter FROM followers
+                WHERE followed_id = :userId';
+
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('userId', $userId);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function isUserFollowed($followerId, $followedId)
+    {
+        $sql = 'SELECT DISTINCT 1 AS isFollowed FROM followers AS f
+                WHERE f.follower_id = :followerId  AND f.followed_id = :followedId';
+
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('followerId', $followerId);
+        $stmt->bindValue('followedId', $followedId);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }

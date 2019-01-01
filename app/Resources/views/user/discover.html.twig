@@ -10,7 +10,8 @@
                         <div><a href="{{ path('user_foreign_profile', {userId: user.id}) }}" class="chirp-author">{{ user.username }}</a></div>
 
                         <div class="user-details">
-                            <span>TODO followers</span>
+                            {#<a href="">delete user + his chirps</a>#}
+                            <span>TODO chirps</span> | <span>{{ user.followers_count }} followers</span>
                         </div>
                     </div>
                 {% endfor %}

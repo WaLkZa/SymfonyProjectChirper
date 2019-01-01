@@ -5,10 +5,14 @@
         <div class="chirper">
             <h2 class="titlebar">{{ user.username }}</h2>
 
-            {#<a id="btnFollow" class="chirp-author" href="#">Follow</a>#}
+            {% if isFollowed %}
+                <a id="btnFollow" class="chirp-author" href="{{ path('user_unfollow', {followedId: user.id}) }}">Unfollow</a>
+            {% else %}
+                <a id="btnFollow" class="chirp-author" href="{{ path('user_follow', {followedId: user.id}) }}">Follow</a>
+            {% endif %}
 
             <div id="userProfileStats" class="user-details">
-                <span>{{ chirpsCount }} chirps</span> | <span>0 following</span> | <span>2 followers</span>
+                <span>{{ chirpsCount }} chirps</span> | <span>{{ followingCount }} following</span> | <span>{{ followersCount }} followers</span>
             </div>
         </div>
         <div id="profileChirps" class="chirps">

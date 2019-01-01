@@ -3,13 +3,13 @@
 namespace ChirperBundle\Controller;
 
 use ChirperBundle\Entity\Chirp;
+use ChirperBundle\Entity\Role;
 use ChirperBundle\Entity\User;
 use ChirperBundle\Form\ChirpType;
 use ChirperBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Role\Role;
 
 class UserController extends Controller
 {
@@ -84,12 +84,24 @@ class UserController extends Controller
             ->getRepository(Chirp::class)
             ->countAllUserChirps($userId);
 
+        $followingCount = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->countUserFollowers($userId);
+
+        $followersCount = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->countUserFollowing($userId);
+
         return $this->render('user/profile.html.twig',
             [
                 'user' => $user,
                 'chirps' => $chirps,
                 'form' => $form->createView(),
-                'chirpsCount' => $chirpsCount
+                'chirpsCount' => $chirpsCount,
+                'followingCount' => $followingCount['counter'],
+                'followersCount' => $followersCount['counter']
             ]
         );
     }
@@ -109,10 +121,15 @@ class UserController extends Controller
             ->getRepository(Chirp::class)
             ->getAllChirps();
 
+        $follewedChirps = $this
+            ->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->getAllChirpsByFollowedUsers($userId);
+
         return $this->render('user/feed.html.twig',
             [
                 'user' => $user,
-                'chirps' => $chirps
+                'chirps' => $follewedChirps
             ]);
     }
 
@@ -153,11 +170,29 @@ class UserController extends Controller
             ->getRepository(Chirp::class)
             ->countAllUserChirps($userId);
 
+        $followingCount = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->countUserFollowers($userId);
+
+        $followersCount = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->countUserFollowing($userId);
+
+        $isFollowed = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->isUserFollowed($currentLoggedUserId, $userId);
+
         return $this->render('user/foreign_profile.html.twig',
             [
                 'user' => $user,
                 'chirps' => $chirps,
-                'chirpsCount' => $chirpsCount
+                'chirpsCount' => $chirpsCount,
+                'followingCount' => $followingCount['counter'],
+                'followersCount' => $followersCount['counter'],
+                'isFollowed' => $isFollowed
             ]
         );
     }

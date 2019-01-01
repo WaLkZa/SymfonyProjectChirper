@@ -2,13 +2,13 @@
 
 {% block body %}
     <div class="content">
-        <div id="chirps" class="chirps"><h2 class="titlebar">Chirps</h2>
+        <div id="chirps" class="chirps"><h2 class="titlebar">Chirps from all followed users</h2>
             {% for chirp in chirps %}
                 <article class="chirp">
                     <div class="titlebar">
-                        <a href="{{ path('user_foreign_profile', {userId: chirp.author.id}) }}" class="chirp-author">{{ chirp.author.username }}</a>
+                        <a href="{{ path('user_foreign_profile', {userId: chirp.authorId}) }}" class="chirp-author">{{ chirp.username }}</a>
                         <span class="chirp-time">
-                            {% if app.getUser() and (app.getUser().isAuthor(chirp) or app.getUser().isAdmin()) %}
+                            {% if app.getUser().isAdmin() %}
                                 <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
                                 <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
                             {% endif %}
@@ -17,6 +17,10 @@
                     </div>
                     <p>{{ chirp.content }}</p>
                 </article>
+            {% else %}
+                <div class="chirp">
+                    <span class="loading">No chirps in feed. Try to follow user(s) with chirps.</span>
+                </div>
             {% endfor %}
         </div>
     </div>
