@@ -116,8 +116,7 @@ class Chirp
      */
     public function getDateAdded()
     {
-        //https://stackoverflow.com/questions/14654963/using-twig-in-a-custom-twig-extension
-        return $this->calculateTime($this->dateAdded);
+        return $this->dateAdded;
    }
 
    /**
@@ -173,51 +172,6 @@ class Chirp
     {
         $this->author = $author;
         return $this;
-    }
-
-    private function calculateTime($date)
-    {
-        $currentDate = new DateTime('now');
-        $sinceStartDate = $currentDate->diff($date);
-
-        $minutes = $sinceStartDate->days * 24 * 60;
-        $minutes += $sinceStartDate->h * 60;
-        $minutes += $sinceStartDate->i;
-
-        if ($minutes < 1) {
-            return 'less than a minute';
-        }
-
-        if ($minutes < 60) {
-            return $minutes . ' minute' . $this->pluralize($minutes);
-        }
-
-        $minutes = floor($minutes / 60);
-
-        if ($minutes < 24) {
-            return $minutes . ' hour' . $this->pluralize($minutes);
-        }
-
-        $minutes = floor($minutes / 24);
-
-        if ($minutes < 30) {
-            return $minutes . ' day' . $this->pluralize($minutes);
-        }
-
-        $minutes = floor($minutes / 30);
-
-        if ($minutes < 12) {
-            return $minutes . ' month' . $this->pluralize($minutes);
-        }
-
-        $minutes = floor($minutes / 12);
-
-        return $minutes . ' year' . $this->pluralize($minutes);
-    }
-
-    private function pluralize($value)
-    {
-        return $value !== 1 ? 's' : '';
     }
 
     private function findURLInText($text)

@@ -25,13 +25,11 @@
                         <span class="chirp-time">
                             <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
                             <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
-                            {{ chirp.dateAdded }}
+                            {{ chirp.dateAdded|calcTime(chirp.dateAdded) }}
                         </span>
                     </div>
                     <p>
-                        {#{% autoescape false %}#}
                         {{ chirp.content }}
-                        {#{% endautoescape %}#}
                     </p>
                 </article>
             {% else %}
