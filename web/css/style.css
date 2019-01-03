@@ -52,6 +52,7 @@ header>*, footer>* {
 }
 
 .chirp {
+    position: relative;
     border-top: 1px solid #e0e0e0;
 }
 
@@ -146,8 +147,8 @@ header>*, footer>* {
 }
 
 #btnFollow {
-    margin: 10px;
-    padding: 5px 10px;
+    margin: 2px;
+    padding: 5px;
     background: #6592bf;
     color: #ffffff;
     display: inline-block;

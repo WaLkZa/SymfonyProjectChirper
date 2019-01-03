@@ -62,7 +62,8 @@ class UserController extends Controller
      */
     public function discoverAction()
     {
-        $currentUserId = $this->getUser()->getId();
+        $currentUser = $this->getUser();
+        $currentUserId = $currentUser->getId();
 
         $users = $this
             ->getDoctrine()
@@ -91,20 +92,9 @@ class UserController extends Controller
         $chirp = new Chirp();
         $form = $this->createForm(ChirpType::class, $chirp);
 
-        $chirpsCount = $this
-            ->getDoctrine()
-            ->getRepository(Chirp::class)
-            ->countAllUserChirps($userId);
-
-        $followingCount = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->countUserFollowers($userId);
-
-        $followersCount = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->countUserFollowing($userId);
+        $chirpsCount = $user->getChirpsCounter();
+        $followingCount = $user->getFollowingCounter();
+        $followersCount = $user->getFollowersCounter();
 
         return $this->render('user/profile.html.twig',
             [
@@ -112,8 +102,8 @@ class UserController extends Controller
                 'chirps' => $chirps,
                 'form' => $form->createView(),
                 'chirpsCount' => $chirpsCount,
-                'followingCount' => $followingCount['counter'],
-                'followersCount' => $followersCount['counter']
+                'followingCount' => $followingCount,
+                'followersCount' => $followersCount
             ]
         );
     }
@@ -127,11 +117,6 @@ class UserController extends Controller
             ->getDoctrine()
             ->getRepository(User::class)
             ->find($userId);
-
-        $chirps = $this
-            ->getDoctrine()
-            ->getRepository(Chirp::class)
-            ->getAllChirps();
 
         $follewedChirps = $this
             ->getDoctrine()
@@ -179,21 +164,9 @@ class UserController extends Controller
             return $this->redirectToRoute('user_discover');
         }
 
-        $chirpsCount = $this
-            ->getDoctrine()
-            ->getRepository(Chirp::class)
-            ->countAllUserChirps($userId);
-
-        $followingCount = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->countUserFollowers($userId);
-
-        $followersCount = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->countUserFollowing($userId);
-
+        $chirpsCount = $user->getChirpsCounter();
+        $followingCount = $user->getFollowingCounter();
+        $followersCount = $user->getFollowersCounter();
         $isFollowed = $currentLoggedUser->isUserFollowed($user);
 
         return $this->render('user/foreign_profile.html.twig',
@@ -201,8 +174,8 @@ class UserController extends Controller
                 'user' => $user,
                 'chirps' => $chirps,
                 'chirpsCount' => $chirpsCount,
-                'followingCount' => $followingCount['counter'],
-                'followersCount' => $followersCount['counter'],
+                'followingCount' => $followingCount,
+                'followersCount' => $followersCount,
                 'isFollowed' => $isFollowed
             ]
         );

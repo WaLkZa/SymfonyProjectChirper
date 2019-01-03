@@ -26,8 +26,10 @@ class SubscribeController extends Controller
         /** @var User $currentUser */
         $currentUser = $this->getUser();
         $currentUser->setFollowing($followedUser);
+        $currentUser->incrementFollowingCounter();
 
         $followedUser->setFollower($currentUser);
+        $followedUser->incrementFollowersCounter();
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($currentUser);
@@ -53,8 +55,10 @@ class SubscribeController extends Controller
         /** @var User $currentUser */
         $currentUser = $this->getUser();
         $currentUser->removeFollowing($followedUser);
+        $currentUser->decrementFollowingCounter();
 
         $followedUser->removeFollower($currentUser);
+        $followedUser->decrementFollowersCounter();
 
         $em = $this->getDoctrine()->getManager();
         $em->flush();

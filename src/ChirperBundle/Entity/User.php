@@ -70,6 +70,27 @@ class User implements UserInterface
     private $following;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="followersCounter", type="integer")
+     */
+    private $followersCounter;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="followingCounter", type="integer")
+     */
+    private $followingCounter;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="chirpsCounter", type="integer")
+     */
+    private $chirpsCounter;
+
+    /**
      * Many Users can like Many Chirps.
      * @ORM\ManyToMany(targetEntity="ChirperBundle\Entity\Chirp")
      * @ORM\JoinTable(name="likes",
@@ -88,6 +109,9 @@ class User implements UserInterface
         $this->following = new ArrayCollection();
 
         $this->chirpLikes = new ArrayCollection();
+        $this->followersCounter = 0;
+        $this->followingCounter = 0;
+        $this->chirpsCounter = 0;
     }
 
     /**
@@ -319,6 +343,60 @@ class User implements UserInterface
     public function isExistChirpLike(Chirp $chirpLike)
     {
         return $this->chirpLikes->contains($chirpLike);
+    }
+
+    /**
+     * @return int
+     */
+    public function getFollowersCounter()
+    {
+        return $this->followersCounter;
+    }
+
+    public function incrementFollowersCounter()
+    {
+        $this->followersCounter++;
+    }
+
+    public function decrementFollowersCounter()
+    {
+        $this->followersCounter--;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFollowingCounter()
+    {
+        return $this->followingCounter;
+    }
+
+    public function incrementFollowingCounter()
+    {
+        $this->followingCounter++;
+    }
+
+    public function decrementFollowingCounter()
+    {
+        $this->followingCounter--;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChirpsCounter()
+    {
+        return $this->chirpsCounter;
+    }
+
+    public function incrementChirpsCounter()
+    {
+        $this->chirpsCounter++;
+    }
+
+    public function decrementChirpsCounter()
+    {
+        $this->chirpsCounter--;
     }
 }
 

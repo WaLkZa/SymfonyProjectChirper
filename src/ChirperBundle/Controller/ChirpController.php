@@ -27,8 +27,10 @@ class ChirpController extends Controller
 
         if ($form->isSubmitted() && $form->isValid())
         {
+            /** @var User $currentUser */
             $currentUser = $this->getUser();
             $chirp->setAuthor($currentUser);
+            $currentUser->incrementChirpsCounter();
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($chirp);
@@ -115,16 +117,17 @@ class ChirpController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-            $currentUser = $this->getUser();
-            $chirp->setAuthor($currentUser);
-            $currentUser->removeChirpLike($chirp);
-            $chirp->removeUserLike($currentUser);
+        $currentUser = $this->getUser();
+        $chirp->setAuthor($currentUser);
+        $currentUser->removeChirpLike($chirp);
+        $chirp->removeUserLike($currentUser);
+        $currentUser->decrementChirpsCounter();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($chirp);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($chirp);
+        $em->flush();
 
-            return $this->redirect($request->headers->get('referer'));
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

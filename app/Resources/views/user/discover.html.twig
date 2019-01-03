@@ -11,7 +11,7 @@
 
                         <div class="user-details">
                             {#<a href="">delete user + his chirps</a>#}
-                            {{ user.followers_count }} followers</span>
+                            <span>{{ user.chirpsCounter }} chirps</span> | <span>{{ user.followingCounter }} following</span> | <span>{{ user.followersCounter }} followers</span>
                         </div>
                     </div>
                 {% endfor %}

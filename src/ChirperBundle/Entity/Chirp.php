@@ -173,17 +173,11 @@ class Chirp
         return $this->likesCounter;
     }
 
-    /**
-     * @param int $likesCounter
-     */
     public function incrementLikesCounter()
     {
         $this->likesCounter++;
     }
 
-    /**
-     * @param int $likesCounter
-     */
     public function decrementLikesCounter()
     {
         $this->likesCounter--;

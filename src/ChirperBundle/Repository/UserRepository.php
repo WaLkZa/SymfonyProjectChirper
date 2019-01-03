@@ -11,11 +11,10 @@ namespace ChirperBundle\Repository;
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
     public function getAllUsersExceptCurrentLogged($userId) {
-        $sql = 'SELECT u.id, u.username, COUNT(f.followed_id) AS followers_count FROM users AS u
-                    LEFT JOIN followers AS f ON f.followed_id = u.id
+        $sql = 'SELECT u.id, u.username, u.followersCounter, u.followingCounter, u.chirpsCounter 
+                    FROM users AS u
                     WHERE u.id != :userId
-                    GROUP BY u.id
-                    ORDER BY followers_count DESC, u.username ASC';
+                    ORDER BY u.followersCounter DESC, u.username ASC';
 
         $stmt = $this->getEntityManager()
             ->getConnection()
