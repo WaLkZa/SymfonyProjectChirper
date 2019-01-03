@@ -5,6 +5,7 @@ namespace ChirperBundle\Controller;
 use ChirperBundle\Entity\Chirp;
 use ChirperBundle\Entity\User;
 use ChirperBundle\Form\ChirpType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,8 @@ class ChirpController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($chirp);
             $em->flush();
+
+            $this->addFlash('edit', "Chirp published.");
 
             return $this->redirect($request->headers->get('referer'));
         }
@@ -73,6 +76,8 @@ class ChirpController extends Controller
             $em->merge($chirp);
             $em->flush();
 
+            $this->addFlash('edit', "Chirp edited");
+
             return $this->redirect($request->headers->get('referer'));
         }
 
@@ -112,6 +117,8 @@ class ChirpController extends Controller
 
             $currentUser = $this->getUser();
             $chirp->setAuthor($currentUser);
+            $currentUser->removeChirpLike($chirp);
+            $chirp->removeUserLike($currentUser);
 
             $em = $this->getDoctrine()->getManager();
             $em->remove($chirp);
@@ -120,13 +127,41 @@ class ChirpController extends Controller
             return $this->redirect($request->headers->get('referer'));
     }
 
-    private function getCurrentUser() {
-        $userId = $this->getUser()->getId();
-        $user = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->find($userId);
+    /**
+     * @Route("/chirp/like/{id}", name="chirp_like")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function likeAction(Request $request, $id)
+    {
+        $currentChirp = $this->getDoctrine()
+            ->getRepository(Chirp::class)
+            ->find($id);
 
-        return $user;
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $isLikeExist = $currentUser->isExistChirpLike($currentChirp);
+
+        if ($isLikeExist)
+        {
+            $currentChirp->decrementLikesCounter();
+            $currentUser->removeChirpLike($currentChirp);
+        }
+        else
+        {
+            $currentChirp->incrementLikesCounter();
+            $currentUser->setChirpLike($currentChirp);
+            $em->persist($currentUser);
+            $em->persist($currentChirp);
+        }
+
+        $em->flush();
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

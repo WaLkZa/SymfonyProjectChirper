@@ -3,8 +3,8 @@
 namespace ChirperBundle\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DOMDocument;
 
 /**
  * Chirp
@@ -38,11 +38,6 @@ class Chirp
     private $dateAdded;
 
     /**
-     * @var string
-     */
-    private $summary;
-
-    /**
      * @var int
      * @ORM\Column(name="authorId", type="integer")
      */
@@ -56,9 +51,24 @@ class Chirp
      */
     private $author;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="likesCounter", type="integer")
+     */
+    private $likesCounter;
+
+    /**
+     * Many Chirps can have Many Users likes.
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="chirpLikes")
+     */
+    private $userLikes;
+
     public function __construct()
     {
         $this->dateAdded = new \DateTime('now');
+        $this->userLikes = new ArrayCollection();
+        $this->likesCounter = 0;
     }
 
     /**
@@ -92,7 +102,7 @@ class Chirp
      */
     public function getContent()
     {
-        return $this->findURLInText($this->content);
+        return $this->content;
     }
 
     /**
@@ -118,25 +128,6 @@ class Chirp
     {
         return $this->dateAdded;
    }
-
-   /**
-    * @return string
-    */
-    public function getSummary()
-    {
-        if (strlen($this->content) > 50)
-        {
-            $this->setSummary();
-        }
-        return $this->summary;
-    }
-
-    public function setSummary()
-    {
-        $this->summary = substr($this->getContent(),
-            0,
-            strlen($this->getContent() / 2) . "...");
-    }
 
     /**
      * @return int
@@ -174,17 +165,48 @@ class Chirp
         return $this;
     }
 
-    private function findURLInText($text)
+    /**
+     * @return int
+     */
+    public function getLikesCounter()
     {
-        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+        return $this->likesCounter;
+    }
 
-        if (preg_match($reg_exUrl, $text, $url)) {
-            // make the urls hyper links
-            return preg_replace($reg_exUrl, '<a href="'.$url[0].'">'.$url[0].'</a>', $text);
-        } else {
-            // if no urls in the text just return the text
-            return $text;
-        }
+    /**
+     * @param int $likesCounter
+     */
+    public function incrementLikesCounter()
+    {
+        $this->likesCounter++;
+    }
+
+    /**
+     * @param int $likesCounter
+     */
+    public function decrementLikesCounter()
+    {
+        $this->likesCounter--;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUserLikes()
+    {
+        return $this->userLikes;
+    }
+
+    public function setUserLike(User $userLike)
+    {
+        $this->userLikes[] = $userLike;
+        return $this;
+    }
+
+    public function removeUserLike(User $userLike)
+    {
+        $this->userLikes->removeElement($userLike);
+        return $this;
     }
 }
 

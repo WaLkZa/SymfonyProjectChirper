@@ -22,9 +22,11 @@
                         <div class="titlebar">
                             <a href="{{ path('user_foreign_profile', {userId: user.id}) }}" class="chirp-author">{{ user.username }}</a>
                             <span class="chirp-time">
+                                <a href="{{ path('chirp_like', {'id': chirp.id}) }}"><i class="fas fa-thumbs-up"></i></a> |
+                                Likes: {{ chirp.likesCounter }} |
                                 {% if app.getUser().isAdmin() %}
-                                    <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
-                                    <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
+                                    <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a> |
+                                    <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a> |
                                 {% endif %}
                                 {{ chirp.dateAdded|calcTime(chirp.dateAdded) }}
                             </span>

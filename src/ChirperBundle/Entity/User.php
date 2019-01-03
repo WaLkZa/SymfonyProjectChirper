@@ -69,6 +69,16 @@ class User implements UserInterface
      */
     private $following;
 
+    /**
+     * Many Users can like Many Chirps.
+     * @ORM\ManyToMany(targetEntity="ChirperBundle\Entity\Chirp")
+     * @ORM\JoinTable(name="likes",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="chirp_id", referencedColumnName="id")}
+     *      )
+     */
+    private $chirpLikes;
+
     public function __construct()
     {
         $this->chirps = new ArrayCollection();
@@ -76,6 +86,8 @@ class User implements UserInterface
 
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
+
+        $this->chirpLikes = new ArrayCollection();
     }
 
     /**
@@ -279,6 +291,29 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getChirpLikes()
+    {
+        return $this->chirpLikes;
+    }
 
+    public function setChirpLike(Chirp $chirpLike)
+    {
+        $this->chirpLikes[] = $chirpLike;
+        return $this;
+    }
+
+    public function removeChirpLike(Chirp $chirpLike)
+    {
+        $this->chirpLikes->removeElement($chirpLike);
+        return $this;
+    }
+
+    public function isExistChirpLike(Chirp $chirpLike)
+    {
+        return $this->chirpLikes->contains($chirpLike);
+    }
 }
 

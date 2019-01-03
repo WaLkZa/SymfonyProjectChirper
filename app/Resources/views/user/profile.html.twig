@@ -23,8 +23,9 @@
                     <div class="titlebar">
                         <a href="{{ path('user_foreign_profile', {userId: chirp.author.id}) }}" class="chirp-author">{{ chirp.author.username }}</a>
                         <span class="chirp-time">
-                            <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a>
-                            <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a>
+                            Likes: {{ chirp.likesCounter }} |
+                            <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a> |
+                            <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a> |
                             {{ chirp.dateAdded|calcTime(chirp.dateAdded) }}
                         </span>
                     </div>
