@@ -153,7 +153,9 @@ class UserController extends Controller
      */
     public function foreignProfileAction(Request $request, $userId)
     {
-        $currentLoggedUserId = $this->getUser()->getId();
+        /** @var User $currentLoggedUser */
+        $currentLoggedUser = $this->getUser();
+        $currentLoggedUserId = $currentLoggedUser->getId();
 
         if ($userId == $currentLoggedUserId) {
             return $this->redirectToRoute('user_profile');
@@ -192,10 +194,7 @@ class UserController extends Controller
             ->getRepository(User::class)
             ->countUserFollowing($userId);
 
-        $isFollowed = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->isUserFollowed($currentLoggedUserId, $userId);
+        $isFollowed = $currentLoggedUser->isUserFollowed($user);
 
         return $this->render('user/foreign_profile.html.twig',
             [

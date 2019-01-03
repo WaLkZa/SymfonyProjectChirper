@@ -50,18 +50,4 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $stmt->execute();
         return $stmt->fetch();
     }
-
-    public function isUserFollowed($followerId, $followedId)
-    {
-        $sql = 'SELECT DISTINCT 1 AS isFollowed FROM followers AS f
-                WHERE f.follower_id = :followerId  AND f.followed_id = :followedId';
-
-        $stmt = $this->getEntityManager()
-            ->getConnection()
-            ->prepare($sql);
-        $stmt->bindValue('followerId', $followerId);
-        $stmt->bindValue('followedId', $followedId);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
 }

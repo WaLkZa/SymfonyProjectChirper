@@ -291,6 +291,11 @@ class User implements UserInterface
         return $this;
     }
 
+    public function isUserFollowed(User $following)
+    {
+        return $this->following->contains($following);
+    }
+
     /**
      * @return ArrayCollection
      */
