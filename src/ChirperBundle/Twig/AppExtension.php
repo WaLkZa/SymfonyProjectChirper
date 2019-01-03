@@ -17,7 +17,9 @@ class AppExtension extends AbstractExtension
 
     public function calculateTime($date)
     {
-        $date = is_string($date) ? new DateTime($date) : $date;
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
 
         $currentDate = new DateTime('now');
         $sinceStartDate = $currentDate->diff($date);
@@ -59,6 +61,6 @@ class AppExtension extends AbstractExtension
 
     private function pluralize($value)
     {
-        return $value !== 1 ? 's' : '';
+        return $value != 1 ? 's' : '';
     }
 }

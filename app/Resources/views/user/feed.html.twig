@@ -14,7 +14,7 @@
                                 <a href="{{ path('chirp_edit', {id: chirp.id}) }}">edit </a> |
                                 <a href="{{ path('chirp_delete', {id: chirp.id}) }}">delete </a> |
                             {% endif %}
-                            {{ chirp.dateAdded|calcTime(chirp.dateAdded) }}
+                            {{ chirp.dateAdded|calcTime }}
                         </span>
                     </div>
                         <p>{{ chirp.content }}</p>
