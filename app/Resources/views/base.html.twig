@@ -20,10 +20,12 @@
             <header><span>Chirper</span></header>
 
             {% if app.user %}
+                {% set route = app.request.attributes.get('_route') %}
+
                 <div class="menu">
-                    <a href="{{ path('user_feed') }}">Home</a>
-                    <a href="{{ path('user_discover') }}">Discover</a>
-                    <a href="{{ path('user_profile') }}">Me</a>
+                    <a href="{{ path('user_feed') }}" class="{{ route == 'user_feed' ? 'nav-active' }}">Home</a>
+                    <a href="{{ path('user_discover') }}" class="{{ route == 'user_discover' or route == 'followers_list' or route == 'following_list' ? 'nav-active' }}">Discover</a>
+                    <a href="{{ path('user_profile') }}" class="{{ route == 'user_profile' ? 'nav-active' }}">Me</a>
                     <a href="{{ path('security_logout') }}">Logout</a>
                 </div>
             {% endif %}

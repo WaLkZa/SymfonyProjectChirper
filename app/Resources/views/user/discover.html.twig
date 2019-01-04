@@ -3,11 +3,12 @@
 {% block body %}
     <div class="content">
         <div class="chirps">
-            {% if app.request.attributes.get('_route') == 'user_discover' %}
+            {% set route = app.request.attributes.get('_route') %}
+            {% if route == 'user_discover' %}
                 <h2 class="titlebar">Discover all users</h2>
-            {% elseif app.request.attributes.get('_route') == 'followers_list' %}
+            {% elseif route == 'followers_list' %}
                 <h2 class="titlebar">{{ currentUser.username }}'s followers:</h2>
-            {% elseif app.request.attributes.get('_route') == 'following_list' %}
+            {% elseif route == 'following_list' %}
                 <h2 class="titlebar">{{ currentUser.username }} follows:</h2>
             {% endif %}
             <div id="userlist">
