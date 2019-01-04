@@ -65,4 +65,40 @@ class SubscribeController extends Controller
 
         return $this->redirect($request->headers->get('referer'));
     }
+
+    /**
+     * @Route("/followersList/{userId}", name="followers_list")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param $userId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listFollowersAction(Request $request, $userId)
+    {
+        $currentUser = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($userId);
+
+        $followers =  $currentUser->getFollowers();
+
+        return $this->render('user/discover.html.twig', ['users' => $followers, 'currentUser' => $currentUser]);
+    }
+
+    /**
+     * @Route("/followingList/{userId}", name="following_list")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param $userId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listFollowingAction(Request $request, $userId)
+    {
+        $currentUser = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($userId);
+
+        $following =  $currentUser->getFollowing();
+
+        return $this->render('user/discover.html.twig', ['users' => $following, 'currentUser' => $currentUser]);
+    }
 }

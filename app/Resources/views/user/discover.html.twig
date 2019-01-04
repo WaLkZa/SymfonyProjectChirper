@@ -3,7 +3,13 @@
 {% block body %}
     <div class="content">
         <div class="chirps">
-            <h2 class="titlebar">Discover</h2>
+            {% if app.request.attributes.get('_route') == 'user_discover' %}
+                <h2 class="titlebar">Discover all users</h2>
+            {% elseif app.request.attributes.get('_route') == 'followers_list' %}
+                <h2 class="titlebar">{{ currentUser.username }}'s followers:</h2>
+            {% elseif app.request.attributes.get('_route') == 'following_list' %}
+                <h2 class="titlebar">{{ currentUser.username }} follows:</h2>
+            {% endif %}
             <div id="userlist">
                 {% for user in users %}
                     <div class="userbox">
@@ -11,8 +17,12 @@
 
                         <div class="user-details">
                             {#<a href="">delete user + his chirps</a>#}
-                            <span>{{ user.chirpsCounter }} chirps</span> | <span>{{ user.followingCounter }} following</span> | <span>{{ user.followersCounter }} followers</span>
+                            {{ user.chirpsCounter }} chirps | <a href="{{ path('following_list', {userId: user.id}) }}">{{ user.followingCounter }} following</a> | <a href="{{ path('followers_list', {userId: user.id}) }}">{{ user.followersCounter }} followers</a>
                         </div>
+                    </div>
+                {% else %}
+                    <div class="chirp">
+                        <span class="loading">No users</span>
                     </div>
                 {% endfor %}
             </div>

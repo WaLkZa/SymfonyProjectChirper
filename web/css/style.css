@@ -69,7 +69,7 @@ header>*, footer>* {
     float: right;
 }
 
-.chirp-time>a {
+.chirp-time>a, .user-details>a {
     text-decoration: none;
 }
 

@@ -12,7 +12,7 @@
             {% endif %}
 
             <div id="userProfileStats" class="user-details">
-                <span>{{ chirpsCount }} chirps</span> | <span>{{ followingCount }} following</span> | <span>{{ followersCount }} followers</span>
+                {{ chirpsCount }} chirps | <a href="{{ path('following_list', {userId: user.id}) }}">{{ followingCount }} following</a> | <a href="{{ path('followers_list', {userId: user.id}) }}">{{ followersCount }} followers</a>
             </div>
         </div>
         <div id="profileChirps" class="chirps">
