@@ -33,8 +33,14 @@ header>*, footer>* {
     padding: 5px 10px;
 }
 
-.menu a:last-of-type {
-    padding: 1px;
+.menu>span {
+    color: #e0e0e0;
+}
+
+.menu a:nth-of-type(3),
+a:nth-of-type(4),
+.menu span {
+    padding: 1px 10px;
     float: right;
 }
 
