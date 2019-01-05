@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% if error %}
+        <script>
+            toastr.error('{{ error.messageKey }}')
+        </script>
+    {% endif %}
+
     <form name="authenticate" action="{{ path('security_login') }}" id="formLogin" class="form chirps" method="post">
         <label>Username</label>
         <input name="_username" type="text">
