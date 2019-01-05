@@ -8,7 +8,7 @@
                     <div class="titlebar">
                         <a href="{{ path('user_foreign_profile', {userId: chirp.authorId}) }}" class="chirp-author">{{ chirp.username }}</a>
                         <span class="chirp-time">
-                            Likes: {{ chirp.likesCounter }} |
+                            <a href="{{ path('chirp_list_likes', {'chirpId': chirp.id}) }}">Likes: {{ chirp.likesCounter }} |</a>
                             <a href="{{ path('chirp_like', {'id': chirp.id}) }}"><i class="fas fa-thumbs-up"></i></a> |
                             {% if app.getUser().isAdmin() %}
                                 <a href="{{ path('chirp_edit', {id: chirp.id}) }}"><i class="fas fa-edit"></i></a> |
